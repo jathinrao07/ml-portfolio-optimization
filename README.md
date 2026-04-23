@@ -74,6 +74,20 @@ streamlit run app.py
 3. Market efficiency is real — equal weight beat ML after costs
 4. Regime matters — model works in bull markets, fails in bear markets
 
+## Future Improvements
+
+- Incorporate macro features (VIX, interest rates, dollar index)
+- Reduce turnover via position regularization
+- Test on 2008 financial crisis data for robustness
+- Explore reinforcement learning for direct portfolio optimization
+- Expand to 20+ assets for better diversification
+
+## References
+
+- Fama, E. (1970). Efficient Capital Markets
+- Markowitz, H. (1952). Portfolio Selection
+- Chen & Guestrin (2016). XGBoost
+
 ## About
 
 I'm Jathin, an MSc Data Science student interested in quantitative finance.
