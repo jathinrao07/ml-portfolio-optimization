@@ -152,6 +152,6 @@ streamlit run app.py
 	•	Chen & Guestrin (2016). XGBoost
 
 👤 Author
-Kadaru JathinMSc Data Science🔗 GitHub
+Kadaru Jathin MSc Data Science🔗 GitHub
 
 Built as part of a quantitative finance internship project — April 2026
