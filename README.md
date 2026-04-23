@@ -1,73 +1,68 @@
-# ML Portfolio Strategy Under Transaction Costs: Why Models Fail in Real Markets
+# 🤖 Multi-Asset ML Portfolio Optimization System
 
-> A critical evaluation of ML-driven portfolio strategies under real market constraints —
-> transaction costs, regime analysis, and market efficiency testing.
+![Python](https://img.shields.io/badge/Python-3.9+-blue)
+![XGBoost](https://img.shields.io/badge/XGBoost-Latest-green)
+![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-red)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
-## Key Findings
+> I built this project to understand how ML can be applied to real financial markets — and more importantly, to understand why 
+it fails.
+> asset returns and construct dynamic portfolios — tested with real market data, 
+> realistic transaction costs, and institutional-grade risk metrics.
+
+---
+
+## 🎯 Project Overview
+
+This project builds a complete ML-driven portfolio management system:
+
+1. **Predict** next-day log returns for 6 assets using XGBoost
+2. **Construct** dynamic portfolios using risk-adjusted weights
+3. **Evaluate** performance against benchmarks with institutional metrics
+4. **Analyse** why the model fails — regime analysis, transaction costs, market efficiency
+
+### What I discovered
+
+Honestly, the most interesting result wasn't what worked — it was 
+what didn't. After adding realistic transaction costs, my ML model 
+couldn't beat a simple equal-weight portfolio.
+
+At first I thought something was wrong. Then I realised this is 
+exactly what the Efficient Market Hypothesis predicts — and that 
+understanding *why* the model fails is more valuable than chasing 
+better numbers.
+
+---
+
+## 📊 Results
 
 | Metric | ML Portfolio | Equal Weight |
 |--------|-------------|--------------|
-| Sharpe Ratio | 1.21 | 1.92 |
-| Annual Turnover | 58.1x | — |
-| Cost Drag | 5.81% | — |
-| Annual Return | 31.54% | 40.52% |
+| Sharpe Ratio | 1.21 | **1.92** |
+| Annual Return | 31.54% | **40.52%** |
+| Max Drawdown | -16.48% | **-9.53%** |
+| Daily Volatility | 1.38% | **1.17%** |
 
-> **Conclusion:** Transaction costs eliminate predictive edge in high-frequency rebalancing strategies — consistent with the Efficient Market Hypothesis.
-
----
-
-## Why This Matters
-
-This project demonstrates that:
-
-- High-frequency ML strategies fail due to transaction costs
-- Risk-adjusted performance matters more than raw returns
-- Simple strategies can outperform complex models in efficient markets
-- Understanding *why* models fail is more valuable than chasing better numbers
-
-This is directly relevant to **portfolio managers, trading desks and risk teams** evaluating ML-driven strategies.
+### Regime Analysis
+| Market | ML Sharpe | Equal Sharpe |
+|--------|-----------|--------------|
+| 🐂 Bull Market | 2.51 | 3.37 |
+| 🐻 Bear Market | -1.22 | -1.08 |
 
 ---
 
-## Core Insight
-
-While the ML model showed initial predictive power (raw Sharpe 2.59), performance degraded significantly once realistic constraints were applied:
-Raw Model → Fix Leakage → Add Costs → Weekly Rebalancing
-Sharpe:  2.59  →  1.99  →  1.88  →  1.21
----
-
-## Why the ML Strategy Underperformed
-
-This is the most important part of the project.
-
-1. **High turnover (58x annually)** — daily rebalancing created 22.65% cost drag
-2. **Momentum chasing** — model captured short-term noise, not stable signals
-3. **Bull market bias** — Sharpe 2.51 in bull markets, -1.22 in bear markets
-4. **Market efficiency** — after costs, simple equal-weight was more efficient
-
-> Most people hide failure. This project investigates it.
+## 🧱 Project Structure
+portfolio-m1/
+│
+├── notebooks/
+│   ├── 01_data_and_returns.ipynb│   ├── 02_feature_engineering.ipynb│   ├── 03_model_training.ipynb│   └── 04_portfolio_construction.ipynb│
+├── data/
+│   ├── prices.csv│   ├── log_returns.csv│   ├── volume.csv│   ├── all_features.pkl│   ├── models.pkl│   └── predictions.pkl│
+├── app.py└── README.md
 
 ---
 
-## What Makes This Different
-
-| Feature | Typical Projects | This Project |
-|---------|-----------------|--------------|
-| Transaction costs | Ignored | 0.1% per trade modeled |
-| Data leakage fix | Often present | Features properly shifted |
-| Regime analysis | Rare | Bull/bear performance split |
-| Turnover analysis | Not included | 58.1x annual turnover measured |
-| Honest conclusions | Cherry-picked | Model failure documented |
-
----
-
-## Pipeline
-Raw Prices → Log Returns → Feature Engineering → XGBoost Models
-→ Risk-Adjusted Weights → Weekly Rebalancing → Transaction Costs
-→ Performance Evaluation → Regime Analysis → Dashboard
----
-
-## Features (19 per asset)
+## ⚙️ Feature Engineering (19 features per asset)
 
 | Category | Features |
 |----------|---------|
@@ -81,61 +76,89 @@ Raw Prices → Log Returns → Feature Engineering → XGBoost Models
 
 ---
 
-## Regime Analysis
+## 💰 Portfolio Construction
 
-| Market | ML Sharpe | Equal Sharpe | Verdict |
-|--------|-----------|--------------|---------|
-| Bull Market | 2.51 | 3.37 | Equal wins |
-| Bear Market | -1.22 | -1.08 | Equal wins |
-
-The model is essentially a momentum amplifier — great in rising markets, damaging in falling ones.
-
----
-
-## Performance Degradation Pipeline
-
-| Stage | Sharpe | What Changed |
-|-------|--------|--------------|
-| Raw model | 2.59 | Before any fixes |
-| Fix data leakage | 1.99 | Proper feature shifting |
-| Add transaction costs | 1.88 | 0.1% per trade, daily |
-| Weekly rebalancing | 2.45 | Reduce turnover |
-| Risk-adjusted weights | 1.21 | Final realistic result |
-| Equal weight benchmark | 1.92 | Simple baseline |
+| Component | Details |
+|-----------|---------|
+| Weight signal | predicted_return / volatility |
+| Max weight | 20% per asset |
+| Rebalancing | Weekly (every 5 days) |
+| Transaction cost | 0.1% per trade |
+| Short selling | Not allowed |
 
 ---
 
-## Future Improvements
+## 📉 Transaction Cost Analysis
 
-- Incorporate fundamental and macroeconomic features (VIX, interest rates)
-- Reduce turnover via position regularization
-- Explore reinforcement learning for direct portfolio optimization
-- Test on 2008 financial crisis data for robustness
-- Expand to 20+ assets for better diversification
+| Metric | Daily | Weekly |
+|--------|-------|--------|
+| Annual turnover | ~250x | 58.1x |
+| Annual cost drag | 22.65% | **5.81%** |
+
+> Switching to weekly rebalancing reduced cost drag by **75%**
 
 ---
 
-## How to Run
+## 🧠 Key Learnings
+
+**1. Data Leakage is subtle**
+Rolling features must be shifted by 1 day to avoid using future information.
+
+**2. Transaction costs destroy alpha**
+Daily rebalancing created 22% annual cost drag — more than the alpha generated.
+
+**3. Market efficiency is real**
+After costs, simple equal-weight outperformed ML — consistent with EMH.
+
+**4. Regime matters**
+Model captures momentum in bull markets but amplifies losses in bear markets.
+
+---
+
+## 🔧 Improvements Made
+
+| Improvement | Impact |
+|-------------|--------|
+| Fixed data leakage | More reliable results |
+| Risk-adjusted weights | Sharpe 1.88 → 1.99 |
+| Weekly rebalancing | Cost drag 22% → 5.81% |
+| XGBoost tuning | RMSE improved all assets |
+
+---
+
+## 🚀 Future Work
+
+- Add sentiment analysis from financial news
+- Include macro features (VIX, interest rates, dollar index)
+- Test on 2008 financial crisis data
+- Implement walk-forward validation
+- Expand to 20+ assets
+
+---
+
+## 🛠️ Installation
 
 ```bash
+# Clone the repo
 git clone https://github.com/jathinrao07/ml-portfolio-optimization.git
 cd ml-portfolio-optimization
+
+# Install dependencies
 pip install yfinance pandas numpy scikit-learn xgboost ta streamlit matplotlib seaborn
+
+# Run notebooks in order (1 → 4)
 jupyter lab
+
+# Launch dashboard
 streamlit run app.py
-Key Learnings
-	1.	Data leakage is subtle — rolling features must be shifted by 1 day
-	2.	Transaction costs destroy alpha — 22% drag from daily rebalancing
-	3.	Market efficiency is real — equal weight beat ML after costs
-	4.	Regime matters — model works in bull markets, fails in bear markets
-	5.	Reducing turnover was the single biggest improvement
-References
+
+📚 References
 	•	Fama, E. (1970). Efficient Capital Markets
 	•	Markowitz, H. (1952). Portfolio Selection
 	•	Chen & Guestrin (2016). XGBoost
-About
-I’m Jathin, an MSc Data Science student interested in quantitative finance.
-I built this project while preparing for UK finance internships — the goal
-was not to build a model that works, but to understand why models fail.
-🔗 GitHub
-Built April 2026 — feedback welcome
+
+👤 About
+
+I'm Jathin, an MSc Data Science student interested in quantitative finance and ML applications. I built this project while preparing for internship applications in the UK finance sector.
+
+Feel free to reach out or fork the repo!
