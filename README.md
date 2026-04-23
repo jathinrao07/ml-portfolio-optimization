@@ -1,62 +1,65 @@
-# 🤖 Multi-Asset ML Portfolio Optimization System
+# ML Portfolio Strategy with Realistic Backtesting
 
-![Python](https://img.shields.io/badge/Python-3.9+-blue)
-![XGBoost](https://img.shields.io/badge/XGBoost-Latest-green)
-![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-red)
-![License](https://img.shields.io/badge/License-MIT-yellow)
+> A critical evaluation of ML-driven portfolio strategies under real market constraints —
+> including transaction costs, regime analysis, and market efficiency testing.
 
-> An end-to-end quantitative finance system that uses machine learning to predict 
-> asset returns and construct dynamic portfolios — tested with real market data, 
-> realistic transaction costs, and institutional-grade risk metrics.
-
----
-
-## 🎯 Project Overview
-
-This project builds a complete ML-driven portfolio management system:
-
-1. **Predict** next-day log returns for 6 assets using XGBoost
-2. **Construct** dynamic portfolios using risk-adjusted weights
-3. **Evaluate** performance against benchmarks with institutional metrics
-4. **Analyse** why the model fails — regime analysis, transaction costs, market efficiency
-
-### Key Finding
-> *"After incorporating transaction costs and realistic rebalancing, the ML strategy 
-> struggled to consistently outperform a simple equal-weight benchmark — consistent 
-> with the Efficient Market Hypothesis and the difficulty of extracting stable alpha 
-> in modern financial markets."*
-
----
-
-## 📊 Results
+## Key Results
 
 | Metric | ML Portfolio | Equal Weight |
 |--------|-------------|--------------|
-| Sharpe Ratio | 1.21 | **1.92** |
-| Annual Return | 31.54% | **40.52%** |
-| Max Drawdown | -16.48% | **-9.53%** |
-| Daily Volatility | 1.38% | **1.17%** |
+| Sharpe Ratio | 1.21 | 1.92 |
+| Annual Return | 31.54% | 40.52% |
+| Max Drawdown | -16.48% | -9.53% |
+| Annual Turnover | 58.1x | — |
+| Cost Drag | 5.81% | — |
 
-### Regime Analysis
-| Market | ML Sharpe | Equal Sharpe |
-|--------|-----------|--------------|
-| 🐂 Bull Market | 2.51 | 3.37 |
-| 🐻 Bear Market | -1.22 | -1.08 |
+**Bottom line:** ML strategy underperformed after realistic constraints — and that's the most valuable finding.
 
 ---
 
-## 🧱 Project Structure
-portfolio-m1/
-│
-├── notebooks/
-│   ├── 01_data_and_returns.ipynb│   ├── 02_feature_engineering.ipynb│   ├── 03_model_training.ipynb│   └── 04_portfolio_construction.ipynb│
-├── data/
-│   ├── prices.csv│   ├── log_returns.csv│   ├── volume.csv│   ├── all_features.pkl│   ├── models.pkl│   └── predictions.pkl│
-├── app.py└── README.md
+## Core Insight
+
+While the ML model showed initial predictive power (raw Sharpe 2.59), performance degraded significantly once realistic constraints were applied:
+Raw Model → Fix Leakage → Add Costs → Weekly Rebalancing
+Sharpe: 2.59 → 1.99 → 1.88 → 1.21
+This highlights the difficulty of generating consistent alpha in efficient markets — consistent with Fama's Efficient Market Hypothesis.
 
 ---
 
-## ⚙️ Feature Engineering (19 features per asset)
+## Why the ML Strategy Underperformed
+
+This is the most important part of the project.
+
+1. **High turnover (58x annually)** — daily rebalancing created 22.65% cost drag
+2. **Momentum chasing** — model captured short-term noise, not stable signals
+3. **Bull market bias** — Sharpe 2.51 in bull markets, -1.22 in bear markets
+4. **Market efficiency** — after costs, simple equal-weight was more efficient
+
+> Most people hide failure. This project investigates it.
+
+---
+
+## What Makes This Different
+
+Compared to typical ML portfolio projects on GitHub:
+
+| Feature | Typical Projects | This Project |
+|---------|-----------------|--------------|
+| Transaction costs | ❌ Ignored | ✅ 0.1% per trade modeled |
+| Data leakage fix | ❌ Often present | ✅ Features properly shifted |
+| Regime analysis | ❌ Rare | ✅ Bull/bear performance split |
+| Turnover analysis | ❌ Not included | ✅ 58.1x annual turnover measured |
+| Honest conclusions | ❌ Cherry-picked | ✅ Model failure documented |
+
+---
+
+## Pipeline
+Raw Prices → Log Returns → Feature Engineering → XGBoost Models
+→ Risk-Adjusted Weights → Weekly Rebalancing → Transaction Costs
+→ Performance Evaluation → Regime Analysis → Dashboard
+---
+
+## Features (19 per asset)
 
 | Category | Features |
 |----------|---------|
@@ -70,88 +73,73 @@ portfolio-m1/
 
 ---
 
-## 💰 Portfolio Construction
+## Regime Analysis
 
-| Component | Details |
-|-----------|---------|
-| Weight signal | predicted_return / volatility |
-| Max weight | 20% per asset |
-| Rebalancing | Weekly (every 5 days) |
-| Transaction cost | 0.1% per trade |
-| Short selling | Not allowed |
+| Market | ML Sharpe | Equal Sharpe | Verdict |
+|--------|-----------|--------------|---------|
+| Bull Market | 2.51 | 3.37 | Equal wins |
+| Bear Market | -1.22 | -1.08 | Equal wins |
 
----
-
-## 📉 Transaction Cost Analysis
-
-| Metric | Daily | Weekly |
-|--------|-------|--------|
-| Annual turnover | ~250x | 58.1x |
-| Annual cost drag | 22.65% | **5.81%** |
-
-> Switching to weekly rebalancing reduced cost drag by **75%**
+The model is essentially a momentum amplifier — great in rising markets, damaging in falling ones.
 
 ---
 
-## 🧠 Key Learnings
+## Performance Degradation Pipeline
 
-**1. Data Leakage is subtle**
-Rolling features must be shifted by 1 day to avoid using future information.
-
-**2. Transaction costs destroy alpha**
-Daily rebalancing created 22% annual cost drag — more than the alpha generated.
-
-**3. Market efficiency is real**
-After costs, simple equal-weight outperformed ML — consistent with EMH.
-
-**4. Regime matters**
-Model captures momentum in bull markets but amplifies losses in bear markets.
+| Stage | Sharpe | What Changed |
+|-------|--------|--------------|
+| Raw model | 2.59 | Before any fixes |
+| Fix data leakage | 1.99 | Proper feature shifting |
+| Add transaction costs | 1.88 | 0.1% per trade, daily |
+| Weekly rebalancing | 2.45 | Reduce turnover |
+| Risk-adjusted weights | 1.21 | Final realistic result |
+| Equal weight benchmark | 1.92 | Simple baseline |
 
 ---
 
-## 🔧 Improvements Made
-
-| Improvement | Impact |
-|-------------|--------|
-| Fixed data leakage | More reliable results |
-| Risk-adjusted weights | Sharpe 1.88 → 1.99 |
-| Weekly rebalancing | Cost drag 22% → 5.81% |
-| XGBoost tuning | RMSE improved all assets |
-
----
-
-## 🚀 Future Work
-
-- Add sentiment analysis from financial news
-- Include macro features (VIX, interest rates, dollar index)
-- Test on 2008 financial crisis data
-- Implement walk-forward validation
-- Expand to 20+ assets
-
----
-
-## 🛠️ Installation
+## How to Run
 
 ```bash
-# Clone the repo
+# Clone
 git clone https://github.com/jathinrao07/ml-portfolio-optimization.git
 cd ml-portfolio-optimization
 
-# Install dependencies
+# Install
 pip install yfinance pandas numpy scikit-learn xgboost ta streamlit matplotlib seaborn
 
-# Run notebooks in order (1 → 4)
+# Run notebooks in order
 jupyter lab
+# 01 → 02 → 03 → 04
 
 # Launch dashboard
 streamlit run app.py
-
-📚 References
+portfolio-m1/
+├── notebooks/
+│   ├── 01_data_and_returns.ipynb
+│   ├── 02_feature_engineering.ipynb
+│   ├── 03_model_training.ipynb
+│   └── 04_portfolio_construction.ipynb
+├── data/
+│   ├── prices.csv
+│   ├── log_returns.csv
+│   ├── all_features.pkl
+│   ├── models.pkl
+│   └── predictions.pkl
+├── app.py
+└── README.md
+Key Learnings
+	1.	Data leakage is subtle — rolling features must be shifted by 1 day
+	2.	Transaction costs destroy alpha — 22% drag from daily rebalancing
+	3.	Market efficiency is real — equal weight beat ML after costs
+	4.	Regime matters — model works in bull markets, fails in bear markets
+	5.	Turnover is the enemy — reducing from daily to weekly rebalancing was the single biggest improvement
+References
 	•	Fama, E. (1970). Efficient Capital Markets
 	•	Markowitz, H. (1952). Portfolio Selection
 	•	Chen & Guestrin (2016). XGBoost
-
-👤 Author
-Kadaru Jathin MSc Data Science🔗 GitHub
-
-Built as part of a quantitative finance internship project — April 2026
+About
+I’m Jathin, an MSc Data Science student interested in quantitative finance.
+I built this project while preparing for UK finance internships — the goal
+was not to build a model that works, but to understand why models fail.
+🔗 GitHub
+Built April 2026 — feedback welcome
