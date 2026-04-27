@@ -9,6 +9,11 @@
 
 ---
 
+## Demo
+
+- Live demo: *(add link — Streamlit Community Cloud / Hugging Face Spaces)*
+- Screenshot: *(add `assets/dashboard.png` and link it here)*
+
 ## Key Findings
 
 | Metric | ML Portfolio | Equal Weight |
@@ -183,7 +188,7 @@ portfolio-m1/
 
 ```bash
 # Clone
-git clone <your-repo-url>
+git clone https://github.com/jathinrao07/ml-portfolio-optimization.git
 cd portfolio-m1
 
 # Install dependencies
@@ -196,6 +201,15 @@ streamlit run app.py
 
 # Note: run `streamlit` from the repo root so `data/*.csv` paths resolve.
 
+```
+
+## Tests / CI
+
+- Run locally: `pytest -q`
+- CI: GitHub Actions workflow in `.github/workflows/ci.yml`
+
+---
+
 References
 	•	Fama, E. (1970). Efficient Capital Markets
 	•	Markowitz, H. (1952). Portfolio Selection
@@ -204,6 +218,6 @@ References
 About
 I’m Jathin, an MSc Data Science student interested in quantitative finance and ML applications in financial markets. I built this project while preparing for UK finance internships.
 The goal was not to build a model that works — but to understand why models fail under real-world constraints. That turned out to be the most valuable lesson.
-🔗 GitHub
+🔗 GitHub: https://github.com/jathinrao07
 
 Built April 2026 — feedback welcome

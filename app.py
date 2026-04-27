@@ -151,11 +151,33 @@ def get_ml_weights(pred_returns, all_features, max_weight=0.20):
         if len(positive) == 0:
             w = pd.Series(1/len(ASSETS), index=ASSETS)
         else:
-            w = positive / positive.sum()
-            w = w.clip(upper=max_weight)
-            w = w / w.sum()
-            full_w = pd.Series(0.0, index=ASSETS)
-            full_w[w.index] = w
+            # Cap-aware normalization: enforce max_weight after renormalization.
+            raw = (positive / positive.sum()).copy()
+            capped = pd.Series(0.0, index=raw.index, dtype=float)
+            remaining = raw.copy()
+
+            # Iteratively cap and redistribute leftover weight.
+            while True:
+                over = remaining[remaining > max_weight]
+                if over.empty:
+                    break
+
+                capped.loc[over.index] = max_weight
+                remaining = remaining.drop(index=over.index)
+
+                leftover = 1.0 - capped.sum()
+                if leftover <= 0 or remaining.empty:
+                    remaining[:] = 0.0
+                    break
+
+                remaining = remaining / remaining.sum() * leftover
+
+            capped.loc[remaining.index] = remaining
+
+            full_w = pd.Series(0.0, index=ASSETS, dtype=float)
+            full_w[capped.index] = capped
+            # Numerical safety: renormalize to sum to 1.
+            full_w = full_w / full_w.sum()
             w = full_w
         weights.iloc[i] = w
     return weights.astype(float)
