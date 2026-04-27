@@ -168,16 +168,13 @@ portfolio-m1/
 ├── notebooks/
 │   ├── 01_data_and_returns.ipynb
 │   ├── 02_feature_engineering.ipynb
-│   ├── 03_model_training.ipynb
 │   └── 04_portfolio_construction.ipynb
 ├── data/
 │   ├── prices.csv
 │   ├── log_returns.csv
 │   ├── volume.csv
-│   ├── all_features.pkl
-│   ├── models.pkl
-│   └── predictions.pkl
 ├── app.py
+├── requirements.txt
 └── README.md
 
 ---
@@ -186,17 +183,18 @@ portfolio-m1/
 
 ```bash
 # Clone
-git clone https://github.com/jathinrao07/ml-portfolio-optimization.git
-cd ml-portfolio-optimization
+git clone <your-repo-url>
+cd portfolio-m1
 
 # Install dependencies
-pip install yfinance pandas numpy scikit-learn xgboost ta streamlit matplotlib seaborn
-
-# Run notebooks in order 01 → 02 → 03 → 04
-jupyter lab
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 
 # Launch dashboard
 streamlit run app.py
+
+# Note: run `streamlit` from the repo root so `data/*.csv` paths resolve.
 
 References
 	•	Fama, E. (1970). Efficient Capital Markets
